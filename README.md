@@ -10,6 +10,6 @@ In a shell in the root of this project, simply run `go run main.go`
 
 - [x] **GET** `/media?path={directory}` - Returns all the assets in a directory
 - [ ] **POST** `/media` - Upload a new asset to a directory
-- [ ] **GET** `/file?path={path}&id={file_id}` - Returns the asset for the given id
+- [x] **GET** `/file?path={path}&id={file_id}` - Returns the asset for the given id
 - [ ] **DELETE** `/file?path={path}&id={file}` - Remove an asset at a path by a given id
 - [ ] **PUT** `/file?path={path}&id={file}` - Updates an asset at a path by a given id

@@ -13,6 +13,7 @@ func AppRouter() *Router {
 
 	r.Get("/", index)
 	r.Get("/media", media)
+	r.Get("/file", file)
 
 	return r
 }
@@ -40,4 +41,21 @@ func media(w http.ResponseWriter, r *http.Request) {
 	}
 
 	u.Respond(w, http.StatusOK, names)
+}
+
+func file(w http.ResponseWriter, r *http.Request) {
+	path := r.FormValue("path")
+	if path == "" {
+		path = "./media"
+	}
+
+	id := r.FormValue("id")
+	if id == "" {
+		e := u.ErrorMessage{Error: "missing the file identifier"}
+		u.Respond(w, http.StatusBadRequest, e)
+		return
+	}
+
+	f := path + "/" + id
+	http.ServeFile(w, r, f)
 }

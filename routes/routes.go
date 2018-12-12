@@ -28,7 +28,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 
 func getMedia(w http.ResponseWriter, r *http.Request) {
-	files, err := ioutil.ReadDir(basePath)
+	path := r.FormValue("path")
+	files, err := ioutil.ReadDir(basePath + path)
 	if err != nil {
 		e := u.ErrorMessage{Error: err.Error()}
 		u.Respond(w, http.StatusInternalServerError, e)

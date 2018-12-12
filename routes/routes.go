@@ -2,6 +2,8 @@ package routes
 
 import (
 	u "favart-api/utility"
+	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -17,7 +19,8 @@ func AppRouter() *Router {
 	r.Get("/", index)
 	r.Get("/media", getMedia)
 	r.Post("/media", addMedia)
-	r.Get("/file", file)
+	r.Get("/file", getFile)
+	r.Post("/file", addFile)
 
 	return r
 }
@@ -69,7 +72,7 @@ func addMedia(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, http.StatusCreated, m)
 }
 
-func file(w http.ResponseWriter, r *http.Request) {
+func getFile(w http.ResponseWriter, r *http.Request) {
 	path := r.FormValue("path")
 	if path == "" {
 		path = "./media"
@@ -84,4 +87,35 @@ func file(w http.ResponseWriter, r *http.Request) {
 
 	f := path + "/" + id
 	http.ServeFile(w, r, f)
+}
+
+func addFile(w http.ResponseWriter, r *http.Request) {
+	path := r.PostFormValue("path")
+	upload, header, err := r.FormFile("upload")
+	defer upload.Close()
+
+	if err != nil {
+		e := u.ErrorMessage{Error: err.Error()}
+		u.Respond(w, http.StatusInternalServerError, e)
+		return
+	}
+
+	fp := basePath + header.Filename
+	if path != "" {
+		fp = fmt.Sprintf("%s%s/%s", basePath, path, header.Filename)
+	}
+
+	file, err := os.OpenFile(fp, os.O_WRONLY|os.O_CREATE, 0666)
+	defer file.Close()
+
+	if err != nil {
+		e := u.ErrorMessage{Error: err.Error()}
+		u.Respond(w, http.StatusInternalServerError, e)
+		return
+	}
+
+	io.Copy(file, upload)
+
+	m := u.PlainTextMessage{Message: "created"}
+	u.Respond(w, http.StatusCreated, m)
 }

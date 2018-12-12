@@ -8,8 +8,9 @@ In a shell in the root of this project, simply run `go run main.go`
 
 ### Endpoints
 
-- [x] **GET** `/media?path={directory}` - Returns all the assets in a directory
-- [ ] **POST** `/media` - Upload a new asset to a directory
+- [x] **GET** `/media?path={directory}` - Returns all the assets in a given directory
+- [x] **POST** `/media` - Create directorys to resolve a path
 - [x] **GET** `/file?path={path}&id={file_id}` - Returns the asset for the given id
 - [ ] **DELETE** `/file?path={path}&id={file}` - Remove an asset at a path by a given id
 - [ ] **PUT** `/file?path={path}&id={file}` - Updates an asset at a path by a given id
+- [ ] **POST** `/file` - Upload a new asset to a directory

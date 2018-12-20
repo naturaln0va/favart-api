@@ -39,18 +39,24 @@ func getMedia(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var names []string
+	var fileInfos []u.FileInfoMessage
 	for _, file := range files {
+		var info u.FileInfoMessage
+
 		name := file.Name()
 		isValidImageFile := strings.HasSuffix(name, ".jpg") || strings.HasSuffix(name, ".png")
 
 		if !isValidImageFile && !file.IsDir() {
 			continue
 		}
-		names = append(names, name)
+
+		info.Name = name
+		info.Size = file.Size()
+
+		fileInfos = append(fileInfos, info)
 	}
 
-	u.Respond(w, http.StatusOK, names)
+	u.Respond(w, http.StatusOK, fileInfos)
 }
 
 func addMedia(w http.ResponseWriter, r *http.Request) {

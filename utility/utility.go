@@ -15,6 +15,12 @@ type ErrorMessage struct {
 	Error string `json:"error"`
 }
 
+// FileInfoMessage defines an object that holds file information
+type FileInfoMessage struct {
+	Name string `json:"name"`
+	Size int64  `json:"size"`
+}
+
 // Respond returns JSON and a HTTP status code
 func Respond(w http.ResponseWriter, code int, data interface{}) {
 	w.Header().Add("Content-Type", "application/json")

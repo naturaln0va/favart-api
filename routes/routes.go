@@ -79,9 +79,11 @@ func addMedia(w http.ResponseWriter, r *http.Request) {
 }
 
 func getFile(w http.ResponseWriter, r *http.Request) {
-	path := r.FormValue("path")
-	if path == "" {
-		path = "./media"
+	path := "./media"
+
+	pathValue := r.FormValue("path")
+	if pathValue != "" {
+		path = path + "/" + pathValue
 	}
 
 	id := r.FormValue("id")

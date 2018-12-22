@@ -10,7 +10,10 @@ import (
 	"strings"
 )
 
-const basePath = "./media/"
+const (
+	basePath    = "./media/"
+	previewPath = "./preview/"
+)
 
 // AppRouter defines all of the routes for the application.
 func AppRouter() *Router {
@@ -21,6 +24,7 @@ func AppRouter() *Router {
 	r.Post("/media", addMedia)
 	r.Get("/file", getFile)
 	r.Post("/file", addFile)
+	r.Get("/preview", getPreview)
 
 	return r
 }
@@ -126,4 +130,62 @@ func addFile(w http.ResponseWriter, r *http.Request) {
 
 	m := u.PlainTextMessage{Message: "created"}
 	u.Respond(w, http.StatusCreated, m)
+}
+
+func getPreview(w http.ResponseWriter, r *http.Request) {
+	sourcePath := basePath
+
+	pathValue := r.FormValue("path")
+	if pathValue != "" {
+		sourcePath = sourcePath + pathValue + "/"
+	}
+
+	id := r.FormValue("id")
+	if id == "" {
+		e := u.ErrorMessage{Error: "missing required parameter 'id'"}
+		u.Respond(w, http.StatusBadRequest, e)
+		return
+	}
+
+	var err error
+
+	sourcePath += id
+	if _, err = os.Stat(sourcePath); os.IsNotExist(err) {
+		e := u.ErrorMessage{Error: "source not found"}
+		u.Respond(w, http.StatusNotFound, e)
+		return
+	}
+
+	fcomps := strings.Split(id, ".")
+	finalPath := fmt.Sprintf("%s%s-thumbnail.jpg", previewPath, fcomps[0])
+
+	if _, err = os.Stat(finalPath); os.IsNotExist(err) {
+		err := os.MkdirAll(previewPath, os.ModePerm)
+		if err != nil {
+			e := u.ErrorMessage{Error: err.Error()}
+			u.Respond(w, http.StatusNotFound, e)
+			return
+		}
+
+		inFile, err := os.Open(sourcePath)
+		outFile, err := os.Create(finalPath)
+
+		if err != nil {
+			e := u.ErrorMessage{Error: err.Error()}
+			u.Respond(w, http.StatusNotFound, e)
+			return
+		}
+		defer outFile.Close()
+
+		err = u.CreateThumbnail(outFile, inFile)
+		inFile.Close()
+
+		if err != nil {
+			e := u.ErrorMessage{Error: err.Error()}
+			u.Respond(w, http.StatusBadRequest, e)
+			return
+		}
+	}
+
+	http.ServeFile(w, r, finalPath)
 }

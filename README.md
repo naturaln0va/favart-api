@@ -16,3 +16,11 @@ In a shell in the root of this project, simply run `go run main.go`
 - [x] **POST** `/file` - Upload a new asset to a directory
 - [ ] **PUT** `/file?path={path}&id={file}` - Updates an asset at a path by a given id
 - [ ] **DELETE** `/file?path={path}&id={file}` - Remove an asset at a path by a given id
+
+### Manual Deployment To Heroku
+
+> This will be configured as a **Deploy To Heroku** button in the future
+
+* Provision the app with `heroku create`
+* Deploy with `git push heroku master`
+* Test the deployment with `heroku open`

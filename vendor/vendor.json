@@ -1,6 +1,4 @@
 {
-	"comment": "",
-	"ignore": "test",
 	"package": [
 		{
 			"checksumSHA1": "6z9MgcvNbdVGsAIvv6BHA1uALQA=",
@@ -9,5 +7,9 @@
 			"revisionTime": "2018-02-21T19:10:11Z"
 		}
 	],
+	"heroku": {
+		"install": ["."],
+		"goVersion": "go1.11.4"
+	},
 	"rootPath": "favart-api"
 }

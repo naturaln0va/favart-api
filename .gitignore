@@ -17,7 +17,6 @@
 *.out
 
 ### Go Patch ###
-/vendor/
 /Godeps/
 
 ### macOS ###

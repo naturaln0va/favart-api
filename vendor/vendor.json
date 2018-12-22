@@ -1,0 +1,13 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "6z9MgcvNbdVGsAIvv6BHA1uALQA=",
+			"path": "github.com/nfnt/resize",
+			"revision": "83c6a9932646f83e3267f353373d47347b6036b2",
+			"revisionTime": "2018-02-21T19:10:11Z"
+		}
+	],
+	"rootPath": "favart-api"
+}

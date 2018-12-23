@@ -102,7 +102,7 @@ func getFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func addFile(w http.ResponseWriter, r *http.Request) {
-	r.Body = http.MaxBytesReader(w, r.Body, 5*1024*1024)
+	r.Body = http.MaxBytesReader(w, r.Body, 25*1024*1024)
 	path := basePath
 
 	pathValue := r.FormValue("path")

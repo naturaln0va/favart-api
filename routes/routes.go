@@ -43,7 +43,7 @@ func getMedia(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var fileInfos []u.FileInfoMessage
+	fileInfos := make([]u.FileInfoMessage, 0)
 	for _, file := range files {
 		var info u.FileInfoMessage
 

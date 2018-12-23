@@ -83,11 +83,11 @@ func addMedia(w http.ResponseWriter, r *http.Request) {
 }
 
 func getFile(w http.ResponseWriter, r *http.Request) {
-	path := "./media"
+	path := basePath
 
 	pathValue := r.FormValue("path")
 	if pathValue != "" {
-		path = path + "/" + pathValue
+		path = path + pathValue
 	}
 
 	id := r.FormValue("id")
@@ -102,11 +102,12 @@ func getFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func addFile(w http.ResponseWriter, r *http.Request) {
-	path := "./media"
+	r.Body = http.MaxBytesReader(w, r.Body, 5*1024*1024)
+	path := basePath
 
 	pathValue := r.FormValue("path")
 	if pathValue != "" {
-		path = path + "/" + pathValue
+		path = path + pathValue
 	}
 
 	id := r.FormValue("id")

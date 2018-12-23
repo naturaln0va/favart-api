@@ -22,6 +22,7 @@ func AppRouter() *Router {
 	r.Get("/", index)
 	r.Get("/media", getMedia)
 	r.Post("/media", addMedia)
+	r.Delete("/media", deleteMedia)
 	r.Get("/file", getFile)
 	r.Post("/file", addFile)
 	r.Get("/preview", getPreview)
@@ -80,6 +81,27 @@ func addMedia(w http.ResponseWriter, r *http.Request) {
 
 	m := u.PlainTextMessage{Message: "created"}
 	u.Respond(w, http.StatusCreated, m)
+}
+
+func deleteMedia(w http.ResponseWriter, r *http.Request) {
+	pathValue := r.FormValue("path")
+	if pathValue == "" {
+		e := u.ErrorMessage{Error: "missing required parameter 'path'"}
+		u.Respond(w, http.StatusBadRequest, e)
+		return
+	}
+
+	path := basePath + pathValue
+
+	err := os.RemoveAll(path)
+	if err != nil {
+		e := u.ErrorMessage{Error: err.Error()}
+		u.Respond(w, http.StatusInternalServerError, e)
+		return
+	}
+
+	m := u.PlainTextMessage{Message: "removed"}
+	u.Respond(w, http.StatusOK, m)
 }
 
 func getFile(w http.ResponseWriter, r *http.Request) {

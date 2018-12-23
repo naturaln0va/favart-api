@@ -48,7 +48,7 @@ func getMedia(w http.ResponseWriter, r *http.Request) {
 		var info u.FileInfoMessage
 
 		name := file.Name()
-		isValidImageFile := strings.HasSuffix(name, ".jpg") || strings.HasSuffix(name, ".png")
+		isValidImageFile := strings.HasSuffix(name, ".jpg") || strings.HasSuffix(name, ".jpeg") || strings.HasSuffix(name, ".png")
 
 		if !isValidImageFile && !file.IsDir() {
 			continue
@@ -102,33 +102,37 @@ func getFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func addFile(w http.ResponseWriter, r *http.Request) {
-	path := r.PostFormValue("path")
-	upload, header, err := r.FormFile("upload")
-	defer upload.Close()
+	path := "./media"
 
-	if err != nil {
-		e := u.ErrorMessage{Error: err.Error()}
-		u.Respond(w, http.StatusInternalServerError, e)
+	pathValue := r.FormValue("path")
+	if pathValue != "" {
+		path = path + "/" + pathValue
+	}
+
+	id := r.FormValue("id")
+	if id == "" {
+		e := u.ErrorMessage{Error: "missing required parameter 'id'"}
+		u.Respond(w, http.StatusBadRequest, e)
 		return
 	}
 
-	fp := basePath + header.Filename
-	if path != "" {
-		fp = fmt.Sprintf("%s%s/%s", basePath, path, header.Filename)
-	}
-
-	file, err := os.OpenFile(fp, os.O_WRONLY|os.O_CREATE, 0666)
-	defer file.Close()
-
+	fullPath := path + "/" + id
+	file, err := os.Create(fullPath)
 	if err != nil {
 		e := u.ErrorMessage{Error: err.Error()}
-		u.Respond(w, http.StatusInternalServerError, e)
+		u.Respond(w, http.StatusBadRequest, e)
 		return
 	}
 
-	io.Copy(file, upload)
+	n, err := io.Copy(file, r.Body)
+	if err != nil {
+		e := u.ErrorMessage{Error: err.Error()}
+		u.Respond(w, http.StatusBadRequest, e)
+		return
+	}
 
-	m := u.PlainTextMessage{Message: "created"}
+	message := fmt.Sprintf("created a file with size: %d", n)
+	m := u.PlainTextMessage{Message: message}
 	u.Respond(w, http.StatusCreated, m)
 }
 

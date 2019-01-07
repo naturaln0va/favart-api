@@ -2,6 +2,8 @@
 > A backend for a FileProviderExtension iOS app.
 > This was created to power a sample project app for [RayWenderlich](https://www.raywenderlich.com).
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/naturaln0va/favart-api/tree/master)
+
 ### Run locally
 
 In a shell in the root of this project, simply run `go run main.go`

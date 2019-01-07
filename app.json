@@ -2,5 +2,5 @@
     "name": "Favart Backend",
     "description": "A simple Golang app for the RayWenderlich.com FileProvider extension tutorial.",
     "repository": "https://github.com/naturaln0va/favart-api",
-    "logo": "https://github.com/naturaln0va/favart-api/logo.png"
+    "logo": "https://raw.githubusercontent.com/naturaln0va/favart-api/master/logo.png"
 }

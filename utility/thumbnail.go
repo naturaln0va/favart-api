@@ -2,6 +2,7 @@ package utility
 
 import (
 	"image"
+	"image/color"
 	"image/draw"
 	"image/jpeg"
 	"io"
@@ -22,7 +23,7 @@ func CreateThumbnail(w io.Writer, r io.Reader) error {
 	imgSize := img.Bounds().Size()
 
 	cr := cropRect(imgSize)
-	cropped, err := cropWithCopy(img, cr)
+	cropped, err := cropAndFillWithCopy(img, cr)
 	if err != nil {
 		return err
 	}
@@ -46,8 +47,9 @@ func cropRect(size image.Point) image.Rectangle {
 	return image.Rect(0, s, w, s+w)
 }
 
-func cropWithCopy(img image.Image, cr image.Rectangle) (image.Image, error) {
+func cropAndFillWithCopy(img image.Image, cr image.Rectangle) (image.Image, error) {
 	result := image.NewRGBA(cr)
-	draw.Draw(result, cr, img, cr.Min, draw.Src)
+	draw.Draw(result, cr, &image.Uniform{color.White}, cr.Min, draw.Src) // fill with white
+	draw.Draw(result, cr, img, cr.Min, draw.Over)
 	return result, nil
 }
